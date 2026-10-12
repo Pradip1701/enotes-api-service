@@ -8,10 +8,14 @@ import com.becoder.entity.Category;
 
 public interface CategoryService {
 	
+	public CategoryDto getCategoryById(Integer id);
+
 	public Boolean saveCategory(CategoryDto categoryDto);
 	
 	public List<CategoryDto> getAll();
 
 	public List<CategoryResponse> getActiveAll();
+
+	public Boolean deleteCategoryById(Integer id);
 
 }
