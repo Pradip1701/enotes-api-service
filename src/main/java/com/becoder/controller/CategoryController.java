@@ -51,6 +51,7 @@ public class CategoryController {
 	{
 		String nm=null;
 		nm.length();
+		
 		//You never wrote throw anywhere. Java itself throws the NullPointerException. Nothing in getAll() catches it,
 		//so it travels up to Spring, and Spring looks in @ControllerAdvice for a matching handler.
 		//Two handlers could match:
@@ -93,10 +94,12 @@ public class CategoryController {
 	public ResponseEntity<?> getCategoryDetailsById(@PathVariable Integer id) throws ResourceNotFoundException
 	{
 		//exception handling: GlobalExceptionHandler class 
-	    //6. A local try/catch wins. If your controller has its own try/catch that catches the exception, it never
+	    //1. A local try/catch wins. If your controller has its own try/catch that catches the exception, it never
 	    //reaches this class(GlobalExceptionHandler). That’s why the try/catch in your controller made the global
-	    //handler pointless for that endpoint. and here we comment out bcz try catch not best practice bcz in 
-	    //big project we have to handle exception for every method.so we cant write try catch everytime for each method
+	    //handler pointless for that endpoint. and here we comment out all try catch code bcz try catch not best
+		//practice bcz in big project we have to handle exception for every method.so we cant write try catch
+		//everytime for each method.and try catch works fine without globalexception handler class
+	    
 				
 //				try {
 //					CategoryDto categoryDto=categoryService.getCategoryById(id);
@@ -112,6 +115,8 @@ public class CategoryController {
 //				{
 //					return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
 //				}
+		
+		
 				CategoryDto categoryDto=categoryService.getCategoryById(id);
 				
 				if(ObjectUtils.isEmpty(categoryDto)) {
