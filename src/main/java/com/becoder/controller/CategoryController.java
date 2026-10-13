@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.becoder.dto.CategoryDto;
 import com.becoder.dto.CategoryResponse;
 import com.becoder.entity.Category;
+import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.service.CategoryService;
 
 @RestController
@@ -48,6 +49,19 @@ public class CategoryController {
 	@GetMapping("/category")
 	public ResponseEntity<?> getAll()
 	{
+		String nm=null;
+		nm.length();
+		//You never wrote throw anywhere. Java itself throws the NullPointerException. Nothing in getAll() catches it,
+		//so it travels up to Spring, and Spring looks in @ControllerAdvice for a matching handler.
+		//Two handlers could match:
+		//NullPointerException.class: exact match
+		//Exception.class: matches because Exception is the parent
+		//Spring picks the closest match in the inheritance tree, which is the ResourceNotFoundException handler. 
+		//The order of methods in the file doesn’t matter
+		
+		//without a global handler, Spring Boot uses BasicErrorController and its default /error page. Unhandled custom
+		//exceptions come back as 500 with a generic body, so I use @ControllerAdvice to return the right status code 
+		//and a meaningful, consistent response.”
 		List<CategoryDto> list=categoryService.getAll();
 		
 		if(CollectionUtils.isEmpty(list)) {
@@ -76,18 +90,39 @@ public class CategoryController {
 	
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<?> getCategoryDetailsById(@PathVariable Integer id)
+	public ResponseEntity<?> getCategoryDetailsById(@PathVariable Integer id) throws ResourceNotFoundException
 	{
-		CategoryDto categoryDto=categoryService.getCategoryById(id);
-		
-		if(ObjectUtils.isEmpty(categoryDto)) {
-			return new ResponseEntity<>("details not found with id"+id,HttpStatus.NOT_FOUND);
-		}
-		else
-		{
-			return new ResponseEntity<>(categoryDto,HttpStatus.OK);
-		}
-	}
+		//exception handling: GlobalExceptionHandler class 
+	    //6. A local try/catch wins. If your controller has its own try/catch that catches the exception, it never
+	    //reaches this class(GlobalExceptionHandler). That’s why the try/catch in your controller made the global
+	    //handler pointless for that endpoint. and here we comment out bcz try catch not best practice bcz in 
+	    //big project we have to handle exception for every method.so we cant write try catch everytime for each method
+				
+//				try {
+//					CategoryDto categoryDto=categoryService.getCategoryById(id);
+//					
+//					if(ObjectUtils.isEmpty(categoryDto)) {
+//						return new ResponseEntity<>("details not found with id"+id,HttpStatus.NOT_FOUND);
+//					}
+//					else
+//						return new ResponseEntity<>(categoryDto,HttpStatus.OK);
+//					
+//				}
+//				catch(ResourceNotFoundException e)
+//				{
+//					return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+//				}
+				CategoryDto categoryDto=categoryService.getCategoryById(id);
+				
+				if(ObjectUtils.isEmpty(categoryDto)) {
+					return new ResponseEntity<>("details not found with id"+id,HttpStatus.NOT_FOUND);
+				}
+				else
+					return new ResponseEntity<>(categoryDto,HttpStatus.OK);
+
+			}
+	
+	
 	
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<?> deleteCategoryById(@PathVariable Integer id)

@@ -8,10 +8,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.becoder.dto.CategoryDto;
 import com.becoder.dto.CategoryResponse;
 import com.becoder.entity.Category;
+import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.repository.CategoryRepository;
 import com.becoder.service.CategoryService;
 
@@ -82,6 +84,11 @@ public class CategoryServiceImpl implements CategoryService{
 	@Override
 	public List<CategoryResponse> getActiveAll() {
 		List<Category> categorylist=categoryRepository.findByIsActiveTrueAndIsDeletedFalse();
+//		if(categorylist == null)
+//    	{
+//    		throw new IllegalArgumentException("NAME IS NULL");
+//    	}
+		//for above our @ExceptionHandler(Exception.class)  this works bcz its parent of every class
 		
 		List<CategoryResponse> categoryResponseList=categorylist.stream().map(cat->mapper.map(cat, CategoryResponse.class)).toList();
 		return categoryResponseList;
@@ -89,12 +96,14 @@ public class CategoryServiceImpl implements CategoryService{
 
 
 	@Override
-	public CategoryDto getCategoryById(Integer id) {
-        Optional<Category> categoryDto=categoryRepository.findByIdAndIsDeletedFalse(id);
-        if(categoryDto.isPresent()	)
+	public CategoryDto getCategoryById(Integer id) throws ResourceNotFoundException {
+        Category category=categoryRepository.findByIdAndIsDeletedFalse(id)
+        		.orElseThrow(()->new ResourceNotFoundException("category not found with id"+id));
+        if(!ObjectUtils.isEmpty(category))
         {
-        	Category category=categoryDto.get();
+        	//category.getName().toUpperCase();  for this our nullpointer exception class works
         	return mapper.map(category,CategoryDto.class);
+        	
         }
 		return null;
 	}

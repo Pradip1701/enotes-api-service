@@ -5,10 +5,11 @@ import java.util.List;
 import com.becoder.dto.CategoryDto;
 import com.becoder.dto.CategoryResponse;
 import com.becoder.entity.Category;
+import com.becoder.exception.ResourceNotFoundException;
 
 public interface CategoryService {
 	
-	public CategoryDto getCategoryById(Integer id);
+	public CategoryDto getCategoryById(Integer id) throws ResourceNotFoundException;
 
 	public Boolean saveCategory(CategoryDto categoryDto);
 	
