@@ -16,6 +16,7 @@ import com.becoder.entity.Category;
 import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.repository.CategoryRepository;
 import com.becoder.service.CategoryService;
+import com.becoder.util.Validation;
 
 @Service
 public class CategoryServiceImpl implements CategoryService{
@@ -27,6 +28,9 @@ public class CategoryServiceImpl implements CategoryService{
 	@Autowired
 	private ModelMapper mapper;
 	
+	@Autowired
+	private Validation validation;
+	
 	//for model mapper we also have dependency this is not in springintilizer we have to take it from goggle
 	@Override
 	public Boolean saveCategory(CategoryDto categoryDto) {
@@ -36,6 +40,10 @@ public class CategoryServiceImpl implements CategoryService{
 //		category.setDescription(categoryDto.getDescription());
 //		category.setIsActive(categoryDto.getIsActive());
 //		
+		
+		
+		//Validation Checking
+		validation.categoryValidation(categoryDto);
 		Category category=mapper.map(categoryDto,Category.class);
 		
 		if(ObjectUtils.isEmpty(category.getId()))
