@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.becoder.dto.CategoryDto;
 import com.becoder.dto.CategoryResponse;
 import com.becoder.entity.Category;
+import com.becoder.exception.ExistDataException;
 import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.repository.CategoryRepository;
 import com.becoder.service.CategoryService;
@@ -44,6 +45,14 @@ public class CategoryServiceImpl implements CategoryService{
 		
 		//Validation Checking
 		validation.categoryValidation(categoryDto);
+		
+		//check category exist or not
+		Boolean exist=categoryRepository.existsByName(categoryDto.getName().trim());
+		if(exist)
+		{
+			throw new ExistDataException("CATEGORY ALREADAY EXIST");
+		}
+		
 		Category category=mapper.map(categoryDto,Category.class);
 		
 		if(ObjectUtils.isEmpty(category.getId()))
