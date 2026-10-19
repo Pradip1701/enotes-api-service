@@ -20,6 +20,7 @@ import com.becoder.dto.CategoryResponse;
 import com.becoder.entity.Category;
 import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.service.CategoryService;
+import com.becoder.util.CommonUtil;
 
 import jakarta.validation.Valid;
 
@@ -34,16 +35,17 @@ public class CategoryController {
 	@PostMapping("/save-category")
 	public ResponseEntity<?> saveCategory(@RequestBody CategoryDto categoryDto)
 	{
-		
 		Boolean b=categoryService.saveCategory(categoryDto);
 		
 		if(b) 
 		{
-			return new ResponseEntity<>("saved success",HttpStatus.CREATED);
+		  return CommonUtil.createBuildResponeMessage("saved success", HttpStatus.CREATED);//generic response handler
+			//return new ResponseEntity<>("saved success",HttpStatus.CREATED);
 		}
 		else
 		{
-			return new ResponseEntity<>("not saved",HttpStatus.INTERNAL_SERVER_ERROR);
+		  return CommonUtil.createErrorResponeMessage("not saved", HttpStatus.INTERNAL_SERVER_ERROR);//generic response
+			//return new ResponseEntity<>("not saved",HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -52,8 +54,8 @@ public class CategoryController {
 	@GetMapping("/category")
 	public ResponseEntity<?> getAll()
 	{
-		String nm=null;
-		nm.length();
+//		String nm=null;
+//		nm.length();
 		
 		//You never wrote throw anywhere. Java itself throws the NullPointerException. Nothing in getAll() catches it,
 		//so it travels up to Spring, and Spring looks in @ControllerAdvice for a matching handler.
@@ -73,7 +75,8 @@ public class CategoryController {
 		}
 		else
 		{
-			return new ResponseEntity<>(list,HttpStatus.OK);
+			return CommonUtil.createBuildRespone(list, HttpStatus.OK);
+			//return new ResponseEntity<>(list,HttpStatus.OK);
 		}
 	}
 	
@@ -87,7 +90,7 @@ public class CategoryController {
 			return ResponseEntity.noContent().build();
 		}
 		else
-		{
+		{   
 			return new ResponseEntity<>(list,HttpStatus.OK);
 		}
 	}
