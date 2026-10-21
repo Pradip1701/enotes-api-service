@@ -33,6 +33,7 @@ public class CategoryServiceImpl implements CategoryService{
 	private Validation validation;
 	
 	//for model mapper we also have dependency this is not in springintilizer we have to take it from goggle
+	
 	@Override
 	public Boolean saveCategory(CategoryDto categoryDto) {
 		
@@ -48,6 +49,7 @@ public class CategoryServiceImpl implements CategoryService{
 		
 		//check category exist or not
 		Boolean exist=categoryRepository.existsByName(categoryDto.getName().trim());
+		
 		if(exist)
 		{
 			throw new ExistDataException("CATEGORY ALREADAY EXIST");

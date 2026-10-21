@@ -1,6 +1,7 @@
 package com.becoder.service.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.becoder.dto.NotesDto;
@@ -141,5 +143,21 @@ public class NotesServiceImpl implements NotesService{
 				.stream()
 				.map(note->mapper.map(note,NotesDto.class)).toList();
 	}
+
+
+	public FileDetails getFileDetails(Integer id) throws Exception {
+		FileDetails filedtls=fileRepo.findById(id).
+				orElseThrow(()-> new ResourceNotFoundException("id is not available"));
+		
+		return filedtls;
+	}
+
+
+	public byte[] downloadFile(FileDetails filedtls) throws Exception{
+		FileInputStream io=new FileInputStream(filedtls.getPath());
+		
+		return StreamUtils.copyToByteArray(io);
+	}
+
 
 }
