@@ -56,7 +56,12 @@ public class NotesServiceImpl implements NotesService{
 		ObjectMapper ob=new ObjectMapper();
 		NotesDto notesDto=ob.readValue(notes,NotesDto.class);
 		
-
+        if(!ObjectUtils.isEmpty(notesDto.getId()))
+        {
+        	updateNotes(notesDto,file);
+        	return true;
+        }
+        
 		//category validation
 		checkCategoryExist(notesDto.getCategory());
 	
@@ -80,6 +85,24 @@ public class NotesServiceImpl implements NotesService{
 	}
 
 	
+	private void updateNotes(NotesDto notesDto, MultipartFile file) throws ResourceNotFoundException, IOException {
+		
+		Notes existingNotes=notesRepo.findById(notesDto.getId())
+				.orElseThrow(()->new ResourceNotFoundException("id is not valid"));
+		
+		existingNotes.setTitle(notesDto.getTitle());
+		existingNotes.setDescription(notesDto.getDescription());
+		if (file != null && !file.isEmpty()) {
+		    // user sent a new file -> save it and replace the old one
+		    FileDetails fileDetails = saveFileDetails(file);
+		    existingNotes.setFileDetails(fileDetails);
+		}
+		// else: do nothing, the old file details stay as they are
+		notesRepo.save(existingNotes);
+		
+	}
+
+
 	private FileDetails saveFileDetails(MultipartFile file) throws IOException {
 
 		if(!ObjectUtils.isEmpty(file) && !file.isEmpty())
