@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.becoder.dto.NotesDto;
 import com.becoder.dto.NotesResponse;
 import com.becoder.entity.FileDetails;
+import com.becoder.entity.Notes;
 import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.repository.FileRepository;
 import com.becoder.service.impl.NotesServiceImpl;
@@ -92,6 +93,34 @@ public class NotesController {
 		return CommonUtil.createBuildRespone(allNotes,HttpStatus.OK);
 	}
 	
+	@GetMapping("/delete-notes/{id}")
+	public ResponseEntity<?> softDeleteNotes(@PathVariable Integer id) throws ResourceNotFoundException
+	{  
+		notesService.deleteNotes(id);
+		return CommonUtil.createBuildResponeMessage("notes deleted success",HttpStatus.OK);
+	}
+	
+	
+	@GetMapping("/restore/{id}")
+	public ResponseEntity<?> restoreNotes(@PathVariable Integer id) throws ResourceNotFoundException
+	{  
+		notesService.restoreNotes(id);
+		return CommonUtil.createBuildResponeMessage("notes resstore success",HttpStatus.OK);
+	}
+	
+	
+	@GetMapping("/recycle-bin")
+	public ResponseEntity<?> recycleNotes()
+	{  
+		Integer id=11;
+		List<Notes> recycleNote=notesService.recycleNotes(id);
+		if(!CollectionUtils.isEmpty(recycleNote)) 
+		{
+		return CommonUtil.createBuildRespone(recycleNote,HttpStatus.OK);
+		}else
+			return CommonUtil.createBuildResponeMessage("notes not available",HttpStatus.OK); 
+	}
+
 	
 	
 }

@@ -25,4 +25,10 @@ public interface NotesService {
 	public FileDetails getFileDetails(Integer id) throws Exception;
 
 	public NotesResponse getAllNotesPage(Integer id);
+
+	public void restoreNotes(Integer id) throws ResourceNotFoundException;
+
+	public void deleteNotes(Integer id) throws ResourceNotFoundException;
+	
+	public List<Notes> recycleNotes(Integer id);
 }

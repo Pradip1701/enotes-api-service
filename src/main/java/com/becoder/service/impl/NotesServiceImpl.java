@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -190,7 +192,7 @@ public class NotesServiceImpl implements NotesService{
 	public NotesResponse getAllNotesPage(Integer id) {
 		
 		Pageable pageable=PageRequest.of(1, 5);
-		Page<Notes> pageNotes= notesRepo.findByCreatedBy(id,pageable);
+		Page<Notes> pageNotes= notesRepo.findByCreatedByAndIsDeletedFalse(id,pageable);
 		
 		List<NotesDto> notesDto=pageNotes.get().map(n->mapper.map(n,NotesDto.class)).toList();
 		
@@ -207,5 +209,47 @@ public class NotesServiceImpl implements NotesService{
 				return notes;                                  
 	}
 
+	@Override
+	public void deleteNotes(Integer id) throws ResourceNotFoundException {
+
+		Notes deletedNotes=notesRepo.findById(id)
+				.orElseThrow(()->new ResourceNotFoundException("id is invalid :not found"));
+		
+		deletedNotes.setIsDeleted(true);
+		deletedNotes.setDeletedOn(new Date());
+		notesRepo.save(deletedNotes);
+	}
+
+	@Override
+	public void restoreNotes(Integer id) throws ResourceNotFoundException {
+
+		Notes restoreNote=notesRepo.findById(id)
+				.orElseThrow(()->new ResourceNotFoundException("id is invalid :not found"));
+		
+		restoreNote.setIsDeleted(false);
+		restoreNote.setDeletedOn(null);
+		notesRepo.save(restoreNote);
+	}
+
+
+	@Override
+	public List<Notes> recycleNotes(Integer id) {
+		
+        List<Notes> recycled=notesRepo.findByCreatedByAndIsDeletedTrue(id);
+		
+		if(!CollectionUtils.isEmpty(recycled))
+		{
+		return recycled;
+		}
+		else
+			return null;
+		
+		//in this api i return entity but this is not good practice bcz when we have field like passwords then
+		//its essentail to keep it private and dto exactly so this bcz in dtos we take field as our flexibilty
+		//so use dtos and in this api use or return dto means make return tpye dto
+	}
+
+
+	
 
 }

@@ -31,6 +31,11 @@ public class NotesDto
     private Date updatedOn;
     
     private FilesDto fileDetails;
+
+    private Boolean isDeleted;
+    
+    private Date deletedOn;
+    
     
     @Setter
     @Getter
