@@ -3,11 +3,14 @@ package com.becoder.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.becoder.dto.NotesDto;
+import com.becoder.dto.NotesResponse;
 import com.becoder.entity.FileDetails;
 import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.repository.FileRepository;
@@ -74,4 +78,20 @@ public class NotesController {
 		
 		return ResponseEntity.ok().headers(headers).body(data);
 	}
+	
+	@GetMapping("/get-notes-page")
+	public ResponseEntity<?> getAllNotesPage()
+	{
+		Integer id=11;
+		NotesResponse allNotes=notesService.getAllNotesPage(id);
+		
+		if(ObjectUtils.isEmpty(allNotes))
+		{
+			return ResponseEntity.noContent().build();
+		}
+		return CommonUtil.createBuildRespone(allNotes,HttpStatus.OK);
+	}
+	
+	
+	
 }
