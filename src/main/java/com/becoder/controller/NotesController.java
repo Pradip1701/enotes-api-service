@@ -120,7 +120,6 @@ public class NotesController {
 		}else
 			return CommonUtil.createBuildResponeMessage("notes not available",HttpStatus.OK); 
 	}
-
 	
 	
 	
