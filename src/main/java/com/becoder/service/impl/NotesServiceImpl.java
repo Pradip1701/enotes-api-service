@@ -58,6 +58,9 @@ public class NotesServiceImpl implements NotesService{
 		ObjectMapper ob=new ObjectMapper();
 		NotesDto notesDto=ob.readValue(notes,NotesDto.class);
 		
+		notesDto.setIsDeleted(false);
+		notesDto.setDeletedOn(null);
+		
         if(!ObjectUtils.isEmpty(notesDto.getId()))
         {
         	updateNotes(notesDto,file);
@@ -248,8 +251,6 @@ public class NotesServiceImpl implements NotesService{
 		//its essentail to keep it private and dto exactly so this bcz in dtos we take field as our flexibilty
 		//so use dtos and in this api use or return dto means make return tpye dto
 	}
-
-
 	
 
 }
