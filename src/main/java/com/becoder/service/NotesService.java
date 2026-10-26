@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.becoder.dto.FavouriteNotesDto;
 import com.becoder.dto.NotesDto;
 import com.becoder.dto.NotesResponse;
 import com.becoder.entity.FileDetails;
@@ -33,4 +34,10 @@ public interface NotesService {
 	public List<Notes> recycleNotes(Integer id);
 	
 	public void hardDeleteNotes(Integer id) throws ResourceNotFoundException;
+	
+	public void favouriteNotes(Integer notesId) throws Exception;
+	
+	public void unFavouriteNotes(Integer favNoteId) throws Exception;
+	
+	List<FavouriteNotesDto> getUserFavouriteNotes() throws Exception;
 }
