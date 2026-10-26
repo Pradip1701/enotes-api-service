@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -219,7 +220,7 @@ public class NotesServiceImpl implements NotesService{
 				.orElseThrow(()->new ResourceNotFoundException("id is invalid :not found"));
 		
 		deletedNotes.setIsDeleted(true);
-		deletedNotes.setDeletedOn(new Date());
+		deletedNotes.setDeletedOn(LocalDateTime.now());
 		notesRepo.save(deletedNotes);
 	}
 
@@ -251,6 +252,23 @@ public class NotesServiceImpl implements NotesService{
 		//its essentail to keep it private and dto exactly so this bcz in dtos we take field as our flexibilty
 		//so use dtos and in this api use or return dto means make return tpye dto
 	}
+
+
+	@Override
+	public void hardDeleteNotes(Integer id) throws ResourceNotFoundException {
+		Notes deleteNote=notesRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("id not found for hard DELETE"));
+		
+		if(deleteNote.getIsDeleted())
+		{
+			notesRepo.delete(deleteNote);
+		}
+		else
+		{
+			throw new IllegalArgumentException("u have to first SOFT delete");
+		}
+		
+	}
+
 	
 
 }

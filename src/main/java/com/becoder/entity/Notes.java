@@ -1,5 +1,7 @@
 package com.becoder.entity;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -41,5 +43,6 @@ public class Notes extends BaseModel
     
     private Boolean isDeleted;
     
-    private Date deletedOn;
+    private LocalDateTime deletedOn; //here insted of Date datatype we used LocalDateTime bcz we perform opertaion for minus 
+                                  //days from current date and LocalDateTime have some methods for it
 }

@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -121,6 +122,11 @@ public class NotesController {
 			return CommonUtil.createBuildResponeMessage("notes not available",HttpStatus.OK); 
 	}
 	
-	
+	@DeleteMapping("/hard-delete-notes/{id}")
+	public ResponseEntity<?> hardDeleteNotes(@PathVariable Integer id) throws ResourceNotFoundException
+	{  
+		notesService.hardDeleteNotes(id);
+		return CommonUtil.createBuildResponeMessage("notes deleted success",HttpStatus.OK);
+	}
 	
 }

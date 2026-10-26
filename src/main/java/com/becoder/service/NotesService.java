@@ -31,4 +31,6 @@ public interface NotesService {
 	public void deleteNotes(Integer id) throws ResourceNotFoundException;
 	
 	public List<Notes> recycleNotes(Integer id);
+	
+	public void hardDeleteNotes(Integer id) throws ResourceNotFoundException;
 }
