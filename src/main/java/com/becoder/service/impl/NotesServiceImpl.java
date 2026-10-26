@@ -308,9 +308,29 @@ public class NotesServiceImpl implements NotesService{
 		        .map(fn-> mapper.map(fn, FavouriteNotesDto.class)).toList();
 
 	}
-	
+
+
+	@Override
+	public Boolean copyNotes(Integer id) throws Exception {
+		Notes note=notesRepo.findById(id)
+				.orElseThrow(()-> new ResourceNotFoundException("notes not available with:id"));
+		
+		Notes saveNote=Notes.builder()
+		     .title(note.getTitle())
+		     .description(note.getDescription())
+		     .category(note.getCategory())
+		     .isDeleted(false)
+		     .fileDetails(null)
+		     .build();
+		
+		//: need to check user validation
+		Notes b=notesRepo.save(saveNote);
+		if(!ObjectUtils.isEmpty(b)) {
+			return true;
+		}else
+			return false;
+	}
 	
 
-	
 
 }
