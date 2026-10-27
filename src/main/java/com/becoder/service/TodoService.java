@@ -1,0 +1,17 @@
+package com.becoder.service;
+
+import java.util.List;
+
+import com.becoder.dto.TodoDto;
+import com.becoder.entity.Todo;
+
+public interface TodoService {
+	
+	public Boolean saveTodo(TodoDto todoDto) throws Exception;
+	
+	public TodoDto getTodoById(Integer id) throws Exception;
+	
+	public List<TodoDto> getTodoByUser();
+
+
+}
