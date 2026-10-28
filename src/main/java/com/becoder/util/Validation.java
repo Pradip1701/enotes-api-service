@@ -1,22 +1,33 @@
 package com.becoder.util;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
+import com.becoder.Constants;
 import com.becoder.dto.CategoryDto;
 import com.becoder.dto.TodoDto;
 import com.becoder.dto.TodoDto.StatusDto;
+import com.becoder.dto.UserDto;
+import com.becoder.dto.UserDto.RoleDto;
 import com.becoder.entity.Category;
 import com.becoder.enums.TodoStatus;
 import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.exception.ValidationException;
+import com.becoder.repository.RoleRepository;
+import com.becoder.entity.Role;
 
 @Component
 public class Validation
 {
+	@Autowired
+	private RoleRepository roleRepo;
 	
 	public void categoryValidation(CategoryDto categoryDto)
 	{
@@ -95,6 +106,49 @@ public class Validation
 		{
 			throw new ResourceNotFoundException("not valid status");
 		}
+	}
+
+
+	public void UserValidation(UserDto userDto) {
+		
+		if(!StringUtils.hasText(userDto.getFirstName()))
+		{
+			throw new IllegalArgumentException("firstname is not valid");
+		}
+		if(!StringUtils.hasText(userDto.getLastName()))
+		{
+			throw new IllegalArgumentException("lastname is not valid");
+		}
+		if(!StringUtils.hasText(userDto.getEmail()) && userDto.getEmail().matches(Constants.EMAIL_REGEX))
+		{
+			throw new IllegalArgumentException("email is not valid");
+		}
+		if(!StringUtils.hasText(userDto.getMobNo()) && userDto.getMobNo().matches(Constants.MOB_REGEX))
+		{
+			throw new IllegalArgumentException("mobileno is not valid");
+		}
+		
+		if(CollectionUtils.isEmpty(userDto.getRole()))
+		{
+			throw new IllegalArgumentException("provide the roles");
+		}
+		else
+		{
+			List<Integer> allRole=roleRepo.findAll().stream().map(all -> all.getId()).toList();
+			
+			List<Integer> reqRole=userDto.getRole().stream()
+					                               .map(r->r.getId())
+					                               .filter(r->!allRole.contains(r))
+					                               .toList();
+			if(!CollectionUtils.isEmpty(reqRole))
+			{
+				throw new IllegalArgumentException("provide the roles");
+			}
+
+		}
+		
+		
+		
 	}
 
 }

@@ -13,6 +13,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.becoder.util.CommonUtil;
+
 //@ControllerAdvice: a class that watches all controllers. If any controller throws an exception, this class can 
 //handle it. That’s why it’s called a global exception handler: one place for all error handling, so you don’t write
 //try/catch in every method.
@@ -27,7 +29,9 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<?> handleException(Exception e)
 	{
-		return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+		//return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+		return CommonUtil.createErrorResponeMessage(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+
 	}
 	
 	//@ExceptionHandler: says “when this exception happens, run this method.” The method decides the response 
@@ -36,13 +40,15 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(NullPointerException.class)
 	public ResponseEntity<?> handleNullPointerException(Exception e)
 	{
-		return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+		//return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+		return CommonUtil.createErrorResponeMessage(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<?> handleResourceNotFoundException(Exception e)
 	{
-		return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+		//return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+		return CommonUtil.createErrorResponeMessage(e.getMessage(), HttpStatus.NOT_FOUND);
 	}
 	
 	
@@ -66,19 +72,29 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(ValidationException.class)
 	public ResponseEntity<?> handleValidationException(ValidationException e)
 	{
-		return new ResponseEntity<>(e.getErrors(),HttpStatus.BAD_REQUEST);
+		//return new ResponseEntity<>(e.getErrors(),HttpStatus.BAD_REQUEST);
+		return CommonUtil.createErrorResponeMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(ExistDataException.class)
 	public ResponseEntity<?> handleExistDataException(ExistDataException e)
 	{
-		return new ResponseEntity<>(e.getMessage(),HttpStatus.CONFLICT);
+		//return new ResponseEntity<>(e.getMessage(),HttpStatus.CONFLICT);
+		return CommonUtil.createErrorResponeMessage(e.getMessage(), HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(FileNotFoundException.class)
 	public ResponseEntity<?> handleFileNotFoundException(FileNotFoundException e)
 	{
-		return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+		//return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+		return CommonUtil.createErrorResponeMessage(e.getMessage(), HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<?> IllegalArgumentExceptionException(IllegalArgumentException e)
+	{
+		//return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+		return CommonUtil.createErrorResponeMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 	
 }
