@@ -14,14 +14,14 @@ import com.becoder.util.CommonUtil;
 
 @RestController
 @RequestMapping("/api/v1/user")
-public class UserController {
+public class AuthController {
 
 	@Autowired
 	private UserService userService;
 	
 	
 	@PostMapping("/save")
-	public ResponseEntity<?> register(@RequestBody UserDto userDto)
+	public ResponseEntity<?> register(@RequestBody UserDto userDto) throws Exception
 	{
 		Boolean isSave=userService.register(userDto);
 		if(isSave)
