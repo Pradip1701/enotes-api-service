@@ -18,9 +18,11 @@ import com.becoder.dto.UserDto;
 import com.becoder.dto.UserDto.RoleDto;
 import com.becoder.entity.Category;
 import com.becoder.enums.TodoStatus;
+import com.becoder.exception.ExistDataException;
 import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.exception.ValidationException;
 import com.becoder.repository.RoleRepository;
+import com.becoder.repository.UserRepository;
 import com.becoder.entity.Role;
 
 @Component
@@ -28,6 +30,9 @@ public class Validation
 {
 	@Autowired
 	private RoleRepository roleRepo;
+	
+	@Autowired
+	private UserRepository userRepo;
 	
 	public void categoryValidation(CategoryDto categoryDto)
 	{
@@ -123,6 +128,16 @@ public class Validation
 		{
 			throw new IllegalArgumentException("email is not valid");
 		}
+		else {
+			//existing email validaiton
+			 Boolean b=userRepo.existsByEmail(userDto.getEmail());
+			if(b)
+			{
+				throw new ExistDataException("email already registerd");
+			}
+		}
+		
+		
 		if(!StringUtils.hasText(userDto.getMobNo()) && userDto.getMobNo().matches(Constants.MOB_REGEX))
 		{
 			throw new IllegalArgumentException("mobileno is not valid");
