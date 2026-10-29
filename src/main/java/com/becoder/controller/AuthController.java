@@ -12,6 +12,8 @@ import com.becoder.dto.UserDto;
 import com.becoder.service.UserService;
 import com.becoder.util.CommonUtil;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/api/v1/user")
 public class AuthController {
@@ -21,9 +23,10 @@ public class AuthController {
 	
 	
 	@PostMapping("/save")
-	public ResponseEntity<?> register(@RequestBody UserDto userDto) throws Exception
+	public ResponseEntity<?> register(@RequestBody UserDto userDto,HttpServletRequest req) throws Exception
 	{
-		Boolean isSave=userService.register(userDto);
+		String url=CommonUtil.getUrl(req);
+		Boolean isSave=userService.register(userDto,url);
 		if(isSave)
 		{
 		return CommonUtil.createBuildResponeMessage("registration success",HttpStatus.CREATED);

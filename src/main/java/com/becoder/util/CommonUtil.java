@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 
 import com.becoder.handler.GenericResponse;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 public class CommonUtil {
 
 	public static ResponseEntity<?> createBuildRespone(Object data,HttpStatus status)
@@ -72,5 +74,13 @@ public class CommonUtil {
 	    	return "application/octet-stream";
 		}
 		
+	}
+
+
+	public static String getUrl(HttpServletRequest req) {
+		//this is for dynamic urll while sending eamil to user for verification acccoun
+		String apiUrl=req.getRequestURL().toString();       //      http://localhost:8080/api/v1/user
+		apiUrl=apiUrl.replace(req.getServletPath(),"");           //http://localhost:8080
+		return apiUrl;
 	}
 }
