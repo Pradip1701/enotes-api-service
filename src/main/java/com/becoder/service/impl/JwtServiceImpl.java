@@ -9,6 +9,8 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 import java.util.Base64;
+
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.becoder.entity.User;
@@ -56,6 +58,38 @@ public class JwtServiceImpl implements JwtService{
 	private Key getKey() {
 		byte[] getB=Decoders.BASE64.decode(secretKey);
 		return Keys.hmacShaKeyFor(getB);
+	}
+
+	@Override
+	public String extractUsername(String token) {
+		Claims claims=extractAllClaims(token);
+		return claims.getSubject();
+	}
+
+	private Claims extractAllClaims(String token) {
+		Claims claims=Jwts.parser().verifyWith(dcryptKey(secretKey)).build().parseSignedClaims(token).getPayload();
+		return claims;
+	}
+
+	private SecretKey dcryptKey(String secretKey2) {
+		byte[] keyByte=Decoders.BASE64.decode(secretKey2);
+		return Keys.hmacShaKeyFor(keyByte);
+	}
+
+	@Override
+	public Boolean validateToken(String token, UserDetails userDetails) {
+		
+		if(userDetails.getUsername().equals(extractUsername(token)) && !isExpired(token))
+		{
+			return true;
+		}
+		return false;
+	}
+
+	private boolean isExpired(String token) {
+		Claims claims=extractAllClaims(token);
+		Date isExpire=claims.getExpiration();
+		return isExpire.before(new Date()); 
 	}
 
 	
