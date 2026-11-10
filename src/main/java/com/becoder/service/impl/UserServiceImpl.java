@@ -5,11 +5,19 @@ import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import com.becoder.config.MyUserDetails;
 import com.becoder.dto.EmailRequest;
 import com.becoder.dto.UserDto;
+import com.becoder.dto.UserReq;
+import com.becoder.dto.UserResponse;
 import com.becoder.entity.AccountStatus;
 import com.becoder.entity.Role;
 import com.becoder.entity.User;
@@ -39,6 +47,12 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private EmailSendService emailService;
 	
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+	
 	
 	@Override
 	public Boolean register(UserDto userDto,String url) throws Exception {
@@ -49,6 +63,7 @@ public class UserServiceImpl implements UserService{
 		
 		setRole(userDto,user);
 		setStatus(userDto,user);
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		User userSave=userRepo.save(user);
 		if(!ObjectUtils.isEmpty(userSave))
 		{
@@ -96,6 +111,25 @@ public class UserServiceImpl implements UserService{
 				              .message(msg)
 				              .build();
 		emailService.sendEmail(emailReq);
+	}
+
+	
+	@Override
+	public UserResponse login(UserReq userreq){
+        
+		Authentication auth=authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(userreq.getUsername(),userreq.getPassword()));
+		
+		if(auth.isAuthenticated())
+		{
+			MyUserDetails user=(MyUserDetails)auth.getPrincipal();
+			UserResponse res=UserResponse.builder()
+					                     .userDto(mapper.map(user.getUserdtls(), UserDto.class))
+					                     .token("fsgedddddddsergvcxdtyjkj") 
+					                     .build();
+			return res;
+		}
+		return null;
 	}
 
 
