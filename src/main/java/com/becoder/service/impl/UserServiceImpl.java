@@ -53,6 +53,9 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	
+	@Autowired
+	private JwtServiceImpl jwtSer;
+	
 	
 	@Override
 	public Boolean register(UserDto userDto,String url) throws Exception {
@@ -120,12 +123,16 @@ public class UserServiceImpl implements UserService{
 		Authentication auth=authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(userreq.getUsername(),userreq.getPassword()));
 		
+		
 		if(auth.isAuthenticated())
 		{
 			MyUserDetails user=(MyUserDetails)auth.getPrincipal();
+			
+			String token=jwtSer.generateToken(user.getUserdtls());
+			
 			UserResponse res=UserResponse.builder()
 					                     .userDto(mapper.map(user.getUserdtls(), UserDto.class))
-					                     .token("fsgedddddddsergvcxdtyjkj") 
+					                     .token(token) 
 					                     .build();
 			return res;
 		}

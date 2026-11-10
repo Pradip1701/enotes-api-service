@@ -1,0 +1,62 @@
+package com.becoder.service.impl;
+
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.util.Date;
+import java.util.HashMap;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+
+import java.util.Base64;
+import org.springframework.stereotype.Service;
+
+import com.becoder.entity.User;
+import com.becoder.service.JwtService;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+
+@Service
+public class JwtServiceImpl implements JwtService{
+
+	public String secretKey="";
+	
+	public JwtServiceImpl() {
+		try {
+			KeyGenerator genk=KeyGenerator.getInstance("HmacSHA256");
+			SecretKey sk=genk.generateKey();
+			secretKey=Base64.getEncoder().encodeToString(sk.getEncoded());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public String generateToken(User user) {
+
+		HashMap<String,Object> claims=new HashMap();
+		claims.put("id", user.getId());
+		claims.put("role", user.getRole());
+		claims.put("status", user.getAccountStatus().getIsActive());
+		
+        String token=Jwts.builder()
+        		         .claims().add(claims)
+        		         .subject(user.getEmail())
+        		         .issuedAt(new Date(System.currentTimeMillis()))
+        		         .expiration(new Date(System.currentTimeMillis()+60*60*10))
+        		         .and()
+        		         .signWith(getKey())
+        		         .compact();
+		return token;
+	}
+
+	private Key getKey() {
+		byte[] getB=Decoders.BASE64.decode(secretKey);
+		return Keys.hmacShaKeyFor(getB);
+	}
+
+	
+}
