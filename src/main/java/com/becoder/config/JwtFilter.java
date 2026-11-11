@@ -31,6 +31,8 @@ public class JwtFilter extends OncePerRequestFilter{
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		
+		try
+		{
 		String auth=request.getHeader("Authorization");
 		
 		String token=null;
@@ -51,6 +53,16 @@ public class JwtFilter extends OncePerRequestFilter{
 				aut.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(aut);
 			}
+		}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			response.setContentType("application/json");
+			response.getWriter().write(e.getMessage());
+			return;
+			//this try and catch block is used for handle exception that occr after token expiration 
+			//we used try and catch bcz thsi filter realated exception is not handle by globalexceptionhandler class
 		}
 		filterChain.doFilter(request, response);
 	}
