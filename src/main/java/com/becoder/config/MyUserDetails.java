@@ -41,11 +41,9 @@ public class MyUserDetails implements UserDetails{
 		
 		List<SimpleGrantedAuthority> auth=new ArrayList();
 		
-		userdtls.getRole().forEach(
-				r->{
-					new SimpleGrantedAuthority(r.getName());
-				}
-				);
+		userdtls.getRole().forEach(r->{
+			      auth.add(new SimpleGrantedAuthority("ROLE_"+r.getName()));
+				});
 		return auth;
 	}
 

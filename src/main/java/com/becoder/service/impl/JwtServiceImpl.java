@@ -67,8 +67,16 @@ public class JwtServiceImpl implements JwtService{
 	}
 
 	private Claims extractAllClaims(String token) {
+		try {
 		Claims claims=Jwts.parser().verifyWith(dcryptKey(secretKey)).build().parseSignedClaims(token).getPayload();
-		return claims;
+		     return claims;
+		}
+		catch(Exception e)
+		{
+			throw e;
+		}
+		//this try and catch block is used for handle exception that occr after token expiration 
+		//we used try and catch bcz thsi filter realated exception is not handle by globalexceptionhandler class
 	}
 
 	private SecretKey dcryptKey(String secretKey2) {

@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,6 +35,8 @@ public class CategoryController {
 	
 	
 	@PostMapping("/save-category")
+	@PreAuthorize("hasRole('ADMIN')")//this api only acccesible for admin and we need to add one annotationin security
+	                                                                         //config @EnableMethodSecurity
 	public ResponseEntity<?> saveCategory(@RequestBody CategoryDto categoryDto)
 	{
 		Boolean b=categoryService.saveCategory(categoryDto);
@@ -52,6 +56,7 @@ public class CategoryController {
 	
 	
 	@GetMapping("/category")
+	@PreAuthorize("hasRole('ADMIN')")   
 	public ResponseEntity<?> getAll()
 	{
 //		String nm=null;
@@ -82,6 +87,7 @@ public class CategoryController {
 	
 	
 	@GetMapping("/active-category")
+	@PreAuthorize("hasAnyRole('USER',ADMIN)")       //this api is accessavle for both admin and user 
 	public ResponseEntity<?> getActiveAll()
 	{
 		List<CategoryResponse> list=categoryService.getActiveAll();
@@ -136,6 +142,7 @@ public class CategoryController {
 	
 	
 	@DeleteMapping("/delete/{id}")
+	@PreAuthorize("hasRole('ADMIN')")   
 	public ResponseEntity<?> deleteCategoryById(@PathVariable Integer id)
 	{
 		Boolean deleted=categoryService.deleteCategoryById(id);
