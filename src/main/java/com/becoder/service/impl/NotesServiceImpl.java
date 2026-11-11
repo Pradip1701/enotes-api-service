@@ -31,12 +31,14 @@ import com.becoder.dto.NotesResponse;
 import com.becoder.entity.FavouriteNote;
 import com.becoder.entity.FileDetails;
 import com.becoder.entity.Notes;
+import com.becoder.entity.User;
 import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.repository.CategoryRepository;
 import com.becoder.repository.FavouritesNotesRepository;
 import com.becoder.repository.FileRepository;
 import com.becoder.repository.NotesRepository;
 import com.becoder.service.NotesService;
+import com.becoder.util.CommonUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -301,8 +303,8 @@ public class NotesServiceImpl implements NotesService{
 
 	@Override
 	public List<FavouriteNotesDto> getUserFavouriteNotes() throws Exception {
-		int userId=2;
-		List<FavouriteNote> favNotes=favNotesRepo.findByUserId(userId);
+		 User user=CommonUtil.getLoggedInUser();
+		List<FavouriteNote> favNotes=favNotesRepo.findByUserId(user.getId());
 		
 		return favNotes.stream()
 		        .map(fn-> mapper.map(fn, FavouriteNotesDto.class)).toList();

@@ -26,12 +26,12 @@ public class MyUserDetails implements UserDetails{
 	}
 
 	
-	public User getUserdtls() {
+	public User getUser() {
 		return userdtls;
 	}
 
 
-	public void setUserdtls(User userdtls) {
+	public void setUser(User userdtls) {
 		this.userdtls = userdtls;
 	}
 

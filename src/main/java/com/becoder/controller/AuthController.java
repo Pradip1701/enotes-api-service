@@ -1,17 +1,21 @@
 package com.becoder.controller;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.becoder.dto.LoggedInUserRes;
 import com.becoder.dto.UserDto;
 import com.becoder.dto.UserReq;
 import com.becoder.dto.UserResponse;
+import com.becoder.entity.User;
 import com.becoder.service.UserService;
 import com.becoder.util.CommonUtil;
 
@@ -23,6 +27,9 @@ public class AuthController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired 
+	private ModelMapper mapper;
 	
 	
 	@PostMapping("/save")
@@ -49,6 +56,20 @@ public class AuthController {
 		}
 		else
 		return CommonUtil.createBuildRespone(userRes,HttpStatus.OK);
+			
+	}
+	
+	@GetMapping("/logged-in-user")
+	public ResponseEntity<?> loggedIn() throws Exception
+	{
+		User loggedInUser=CommonUtil.getLoggedInUser();
+		LoggedInUserRes userDto=mapper.map(loggedInUser,LoggedInUserRes.class);
+		if(ObjectUtils.isEmpty(userDto))
+		{
+		return CommonUtil.createErrorResponeMessage("invalid cred",HttpStatus.BAD_REQUEST);
+		}
+		else
+		return CommonUtil.createBuildRespone(userDto,HttpStatus.OK);
 			
 	}
 	

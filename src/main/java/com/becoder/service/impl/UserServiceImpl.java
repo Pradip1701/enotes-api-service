@@ -15,6 +15,7 @@ import org.springframework.util.ObjectUtils;
 
 import com.becoder.config.MyUserDetails;
 import com.becoder.dto.EmailRequest;
+import com.becoder.dto.LoggedInUserRes;
 import com.becoder.dto.UserDto;
 import com.becoder.dto.UserReq;
 import com.becoder.dto.UserResponse;
@@ -24,6 +25,7 @@ import com.becoder.entity.User;
 import com.becoder.repository.RoleRepository;
 import com.becoder.repository.UserRepository;
 import com.becoder.service.UserService;
+import com.becoder.util.CommonUtil;
 import com.becoder.util.Validation;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -128,10 +130,10 @@ public class UserServiceImpl implements UserService{
 		{
 			MyUserDetails user=(MyUserDetails)auth.getPrincipal();
 			
-			String token=jwtSer.generateToken(user.getUserdtls());
+			String token=jwtSer.generateToken(user.getUser());
 			
 			UserResponse res=UserResponse.builder()
-					                     .userDto(mapper.map(user.getUserdtls(), UserDto.class))
+					                     .userDto(mapper.map(user.getUser(), UserDto.class))
 					                     .token(token) 
 					                     .build();
 			return res;
@@ -140,7 +142,6 @@ public class UserServiceImpl implements UserService{
 	}
 
 
-	
 
 	
 }

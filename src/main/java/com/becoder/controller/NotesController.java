@@ -85,7 +85,7 @@ public class NotesController {
 	@GetMapping("/get-notes-page")
 	public ResponseEntity<?> getAllNotesPage()
 	{
-		Integer id=11;
+		Integer id=CommonUtil.getLoggedInUser().getId();
 		NotesResponse allNotes=notesService.getAllNotesPage(id);
 		
 		if(ObjectUtils.isEmpty(allNotes))
@@ -148,10 +148,10 @@ public class NotesController {
 	
 	
 	
-	@GetMapping("/userfav/{userId}")
-	public ResponseEntity<?> unFavouritesNotes(@PathVariable Integer userId) throws Exception
+	@GetMapping("/userfav") //here we dont take userid bcz we taked login user by spring securtyy befor we take 
+	//frompath varaible 
+	public ResponseEntity<?> unFavouritesNotes() throws Exception
 	{  
-	
 		List<FavouriteNotesDto> userfav=notesService.getUserFavouriteNotes();
 		if(CollectionUtils.isEmpty(userfav))
 		{

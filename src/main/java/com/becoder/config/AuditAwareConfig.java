@@ -4,6 +4,9 @@ import java.util.Optional;
 
 import org.springframework.data.domain.AuditorAware;
 
+import com.becoder.entity.User;
+import com.becoder.util.CommonUtil;
+
 //so for getloggedin user id we have AuditorAware interface and it have getCueentAuditor method so we implement this
 //interface and override its method and set id there.
 
@@ -20,7 +23,8 @@ public class AuditAwareConfig implements AuditorAware{
 
 	@Override
 	public Optional<Integer> getCurrentAuditor() {
-		return Optional.of(11);
+		User LoggedInUser=CommonUtil.getLoggedInUser();
+		return Optional.of(LoggedInUser.getId());
 	}
 
 }

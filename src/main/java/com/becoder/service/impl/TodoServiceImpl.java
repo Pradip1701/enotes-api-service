@@ -76,8 +76,8 @@ public class TodoServiceImpl implements TodoService{
 
 	@Override
 	public List<TodoDto> getTodoByUser() {
-		int userId=11;
-		List<Todo> todolist=todoRepo.findByCreatedBy(userId);
+		int userid=11;
+		List<Todo> todolist=todoRepo.findByCreatedBy(userid);
 		return todolist.stream().map(td->mapper.map(td, TodoDto.class)).toList();
 		
 	}

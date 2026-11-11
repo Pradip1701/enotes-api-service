@@ -4,7 +4,10 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.becoder.config.MyUserDetails;
+import com.becoder.entity.User;
 import com.becoder.handler.GenericResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -82,5 +85,19 @@ public class CommonUtil {
 		String apiUrl=req.getRequestURL().toString();       //      http://localhost:8080/api/v1/user
 		apiUrl=apiUrl.replace(req.getServletPath(),"");           //http://localhost:8080
 		return apiUrl;
+	}
+	
+	public static User getLoggedInUser()
+	{
+		try
+		{
+		MyUserDetails loggedInUser=(MyUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		System.out.println((MyUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+		return loggedInUser.getUser();
+		}
+		catch(Exception e)
+		{
+			throw e;
+		}
 	}
 }

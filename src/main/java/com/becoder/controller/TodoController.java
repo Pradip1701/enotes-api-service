@@ -52,7 +52,6 @@ public class TodoController {
 	@GetMapping("/get-todo-byuser/{id}")
 	public ResponseEntity<?> getTodoByIdUser() throws Exception
 	{
-		Integer id=2;
 		List<TodoDto> todoDto=todoService.getTodoByUser();
 		if(CollectionUtils.isEmpty(todoDto))
 		{
