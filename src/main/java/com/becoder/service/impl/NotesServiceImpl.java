@@ -202,7 +202,7 @@ public class NotesServiceImpl implements NotesService{
 	}
 	
 	@Override
-	public NotesResponse getAllNotesPage(Integer id) {
+	public NotesResponse getAllNotesPage(Integer id) {//forpagination concept search pagination in notes ofthis project
 		
 		Pageable pageable=PageRequest.of(1, 5);
 		Page<Notes> pageNotes= notesRepo.findByCreatedByAndIsDeletedFalse(id,pageable);
@@ -331,6 +331,24 @@ public class NotesServiceImpl implements NotesService{
 			return true;
 		}else
 			return false;
+	}
+
+
+	public NotesResponse getAllNotesBySearch(Pageable pageable, Integer id, String keyword) {
+        
+		Page<Notes> pageNotes=notesRepo.findNotesWithSearch(pageable,id,keyword);
+		List<NotesDto> list=pageNotes.get().map(m->mapper.map(m, NotesDto.class)).toList();
+		
+		 NotesResponse notesRes=NotesResponse.builder()
+				                             .notes(list)
+                                             .pageNo(pageNotes.getNumber())
+                                             .pageSize(pageNotes.getSize())
+                                             .totalElements(pageNotes.getTotalElements())
+                                             .totalPages(pageNotes.getTotalPages())
+                                             .isFirst(pageNotes.isFirst())
+                                             .isLast(pageNotes.isLast())
+                                             .build();
+		return notesRes;
 	}
 	
 

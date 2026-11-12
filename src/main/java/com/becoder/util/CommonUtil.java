@@ -92,7 +92,6 @@ public class CommonUtil {
 		try
 		{
 		MyUserDetails loggedInUser=(MyUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		System.out.println((MyUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 		return loggedInUser.getUser();
 		}
 		catch(Exception e)

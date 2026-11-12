@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.domain.Pageable;
+
 
 import com.becoder.dto.FavouriteNotesDto;
 import com.becoder.dto.NotesDto;
@@ -170,5 +172,21 @@ public class NotesController {
 			return CommonUtil.createBuildResponeMessage("copied success",HttpStatus.CREATED);
 		}
 		return CommonUtil.createErrorResponeMessage("copied failed",HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@GetMapping("/search")
+	public ResponseEntity<?> getAllBySearch(@RequestParam String keyword
+			,@RequestParam(defaultValue="0")int pageno
+			,@RequestParam(defaultValue="10")int pagesize)
+	{
+		Integer id=CommonUtil.getLoggedInUser().getId();
+		Pageable pageable=PageRequest.of(pageno, pagesize);
+		NotesResponse allNotes=notesService.getAllNotesBySearch(pageable,id,keyword);
+		
+		if(ObjectUtils.isEmpty(allNotes))
+		{
+			return ResponseEntity.noContent().build();
+		}
+		return CommonUtil.createBuildRespone(allNotes,HttpStatus.OK);
 	}
 }
