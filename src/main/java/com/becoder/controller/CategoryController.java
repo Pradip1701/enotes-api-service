@@ -25,6 +25,7 @@ import com.becoder.service.CategoryService;
 import com.becoder.util.CommonUtil;
 
 import jakarta.validation.Valid;
+import static com.becoder.util.Constants.ROLE_ADMIN;
 
 @RestController
 @RequestMapping("/api/v1/category")
@@ -56,7 +57,8 @@ public class CategoryController {
 	
 	
 	@GetMapping("/category")
-	@PreAuthorize("hasRole('ADMIN')")   
+	//@PreAuthorize("hasRole('ADMIN')")        //INSTED of this use constat here usingjaava constant implem 
+	@PreAuthorize(ROLE_ADMIN) 
 	public ResponseEntity<?> getAll()
 	{
 //		String nm=null;

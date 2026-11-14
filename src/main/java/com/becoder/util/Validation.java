@@ -10,7 +10,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import com.becoder.Constants;
 import com.becoder.dto.CategoryDto;
 import com.becoder.dto.TodoDto;
 import com.becoder.dto.TodoDto.StatusDto;
