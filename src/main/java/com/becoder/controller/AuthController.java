@@ -15,6 +15,7 @@ import com.becoder.dto.LoggedInUserRes;
 import com.becoder.dto.UserDto;
 import com.becoder.dto.UserReq;
 import com.becoder.dto.UserResponse;
+import com.becoder.endpoint.AuthEndpoint;
 import com.becoder.entity.User;
 import com.becoder.service.UserService;
 import com.becoder.util.CommonUtil;
@@ -22,8 +23,7 @@ import com.becoder.util.CommonUtil;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/api/v1/user")
-public class AuthController {
+public class AuthController implements AuthEndpoint{
 
 	@Autowired
 	private UserService userService;
@@ -32,7 +32,6 @@ public class AuthController {
 	private ModelMapper mapper;
 	
 	
-	@PostMapping("/save")
 	public ResponseEntity<?> register(@RequestBody UserDto userDto,HttpServletRequest req) throws Exception
 	{
 		String url=CommonUtil.getUrl(req);
@@ -46,8 +45,8 @@ public class AuthController {
 			
 	}
 	
-	@PostMapping("/login")
-	public ResponseEntity<?> register(@RequestBody UserReq userreq) throws Exception
+	
+	public ResponseEntity<?> login(@RequestBody UserReq userreq) throws Exception
 	{
 		UserResponse userRes=userService.login(userreq);
 		if(ObjectUtils.isEmpty(userRes))
@@ -59,7 +58,7 @@ public class AuthController {
 			
 	}
 	
-	@GetMapping("/logged-in-user")
+
 	public ResponseEntity<?> loggedIn() throws Exception
 	{
 		User loggedInUser=CommonUtil.getLoggedInUser();

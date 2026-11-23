@@ -119,6 +119,8 @@ public class UserServiceImpl implements UserService{
 	}
 
 	
+	//this below code indirectly calls DaoAuthenticationProvider through Spring Security. You don't need to call it
+	//manually.
 	@Override
 	public UserResponse login(UserReq userreq){
         
