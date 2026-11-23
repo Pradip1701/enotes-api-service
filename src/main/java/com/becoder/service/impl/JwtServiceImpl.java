@@ -60,6 +60,8 @@ public class JwtServiceImpl implements JwtService{
 		return Keys.hmacShaKeyFor(getB);
 	}
 
+	// ==================== below this all code is for jwt token validation above code is for jwt create ===========
+	
 	@Override
 	public String extractUsername(String token) {
 		Claims claims=extractAllClaims(token);

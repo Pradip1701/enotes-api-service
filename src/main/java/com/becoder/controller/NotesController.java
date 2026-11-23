@@ -45,7 +45,7 @@ public class NotesController {
 	private FileRepository fileRepo;
 	
 	
-	@PostMapping("/save")
+	@PostMapping(value="/save",consumes="multipart/form-data")        //this is for swagger
 	public ResponseEntity<?> saveNotes(@RequestParam String notes,
 			                           @RequestParam(required=false) MultipartFile file) throws Exception
 	{
