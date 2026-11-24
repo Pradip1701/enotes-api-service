@@ -41,8 +41,8 @@ public class SwaggerConfig {
 	        
 	    	//now open implemetaion of OpenApi then there we have to set servers
 	    	List<Server> serverList=List.of(new Server().description("Dev").url("http://localhost:8080"),
-	    	new Server().description("Dev").url("http://localhost:8081"),
-	    	new Server().description("Dev").url("http://localhost:8082"));
+	    	new Server().description("Prod").url("http://localhost:8081"),
+	    	new Server().description("Test").url("http://localhost:8082"));
 	    	
 	    	//now open implemetaion of OpenApi then there we have to set componenet like bearer xxxxx.yyy.zzz
 	    	SecurityScheme securityScheme=new SecurityScheme().name("Authorization")
