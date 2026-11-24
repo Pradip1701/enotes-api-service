@@ -41,7 +41,7 @@ public class SecurityConfig {
 	{
 		http.csrf(csrf->csrf.disable());
 		http.authorizeHttpRequests(req->
-		req.requestMatchers("/api/v1/user/**","/swagger-ui/**","/v3/api-docs/**","/enotes-doc").permitAll().anyRequest().authenticated()
+		req.requestMatchers("/api/v1/user/**","/swagger-ui/**","/v3/api-docs/**","/enotes-doc","/actuator/**").permitAll().anyRequest().authenticated()
 		)
 		.httpBasic(Customizer.withDefaults())      //this is must be for if we want to perform basic auth in postman 
 		                                            //with db username and password
